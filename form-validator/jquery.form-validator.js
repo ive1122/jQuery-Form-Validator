@@ -72,7 +72,7 @@
                                 .text(help)
                                 .hide();
                 }
-				
+                
                 $element
                     .addClass('has-help-txt')
                     .bind('focus.validation', function() {
@@ -123,7 +123,7 @@
         if ($parent.hasClass('input-group')){
             var $parent = $parent.parent();
         }
-		
+        
         // Remove possible error style applied by previous validation
         $element
             .removeClass(config.errorElementClass)
@@ -132,11 +132,9 @@
              .find('.'+config.errorMessageClass).remove();
 
         // Twitter bs
-        $form.find('.has-error').removeClass('has-error');
         $element.removeClass('valid');
-        $element
-             .parent()
-             .removeClass('has-success');
+        $parent.removeClass('has-error');
+        $parent.removeClass('has-success');
 
         // if element has custom err msg container, clear it
         if( elementErrMsgObj != null) {
@@ -149,21 +147,20 @@
 
         if(validation === true) {
             $element
-                .addClass('valid')
-                .parent()
-                .removeClass('has-error')
+                .addClass('valid');
+            $parent
                 .addClass('has-success'); // twitter bs
         } else if(validation === null) {
             $element
-                .removeClass('valid')
-                .parent()
+                .removeClass('valid');
+            $parent
                 .removeClass('has-error')
                 .removeClass('has-success'); // twitter bs
         } else {
             $element
                 .addClass(config.errorElementClass)
-                .removeClass('valid')
-                .parent()
+                .removeClass('valid');
+            $parent
                 .addClass('has-error')
                 .removeClass('has-success'); // twitter bs
 
@@ -172,9 +169,7 @@
                 elementErrMsgObj.innerHTML = validation;
             } else { // use regular span append
                 $parent.append('<span class="'+config.errorMessageClass+' help-block">'+validation+'</span>');
-                $element
-                    .parent()
-                    .addClass('has-error'); // twitter bs
+                $parent.addClass('has-error'); // twitter bs
             }
 
             if(config.borderColorOnError !== '') {
@@ -232,6 +227,12 @@
          * @para {jQuery} $element
          */
         var addErrorMessage = function(mess, $element) {
+            var $parent = $element.parent();
+            // Twitter bs
+            if ($parent.hasClass('input-group')){
+                var $parent = $parent.parent();
+            }
+            
             // validate server side will return null as error message before the server is requested
             if(mess !== null) {
                 if ($.inArray(mess, errorMessages) < 0) {
@@ -240,8 +241,8 @@
                 errorInputs.push($element);
                 $element
                     .valAttr('current-error', mess)
-                    .removeClass('valid')
-                    .parent()
+                    .removeClass('valid');
+                $parent
                     .removeClass('has-success');
             }
         },
@@ -274,6 +275,12 @@
         //
         $form.find('input,textarea,select').filter(':not([type="submit"],[type="button"])').each(function() {
             var $element = $(this);
+            var $parent = $element.parent();
+            // Twitter bs
+            if ($parent.hasClass('input-group')){
+                var $parent = $parent.parent();
+            }
+            
             var elementType = $element.attr('type');
             if (!ignoreInput($element.attr('name'), elementType)) {
 
@@ -292,9 +299,9 @@
                 } else {
                     $element
                         .valAttr('current-error', false)
-                        .addClass('valid')
-                        .parent()
-                            .addClass('has-success');
+                        .addClass('valid');
+                    $parent
+                        .addClass('has-success');
                 }
             }
 
@@ -864,8 +871,8 @@
             year = findDateUnit('y', formatParts, matches);
         
             if ((month === 2 && day > 28 && (year % 4 !== 0  || year % 100 === 0 && year % 400 !== 0)) 
-            	|| (month === 2 && day > 29 && (year % 4 === 0 || year % 100 !== 0 && year % 400 === 0))
-            	|| month > 12 || month === 0) {
+              || (month === 2 && day > 29 && (year % 4 === 0 || year % 100 !== 0 && year % 400 === 0))
+              || month > 12 || month === 0) {
                 return false;
             }
             if ((this.isShortMonth(month) && day > 30) || (!this.isShortMonth(month) && day > 31) || day === 0) {
