@@ -341,13 +341,19 @@
 
             // Apply error style to invalid inputs
             $.each(errorInputs, function(i, $input) {
+                var $parent = $input.parent();
+                // Twitter bs
+                if ($parent.hasClass('input-group')){
+                    $parent = $parent.parent();
+                }
+                
                 if (config.borderColorOnError !== '') {
                     $input.css('border-color', config.borderColorOnError);
                 }
                 $input
-                    .addClass(config.errorElementClass)
-                    .parent()
-                        .addClass('has-error');
+                    .addClass(config.errorElementClass);
+                $parent
+                    .addClass('has-error');
             });
 
             // display all error messages in top of form
@@ -367,8 +373,14 @@
             // Display error message below input field
             else {
                 $.each(errorInputs, function(i, $input) {
-                    var $parent = $input.parent(),
-                        $errorSpan = $parent.find('span[class='+config.errorMessageClass+']');
+                    var $parent = $input.parent();
+                    
+                    // Twitter bs
+                    if ($parent.hasClass('input-group')){
+                        $parent = $parent.parent();
+                    }
+                    
+                    var $errorSpan = $parent.find('span[class='+config.errorMessageClass+']');
                     if ($errorSpan.length > 0) {
                         $errorSpan.text(', '+$input.valAttr('current-error'));
                     } else {
