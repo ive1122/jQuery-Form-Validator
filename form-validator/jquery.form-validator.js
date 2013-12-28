@@ -58,12 +58,12 @@
 
             if(help) {
                 var $parent = $element.parent();
-    			var $help = $element.parent().find('.'+className);
-    			// Twitter bs
-    			if ($parent.hasClass('input-group')){
-    				$parent = $parent.parent();
-    				$help = $parent.find('.'+className);
-    			}
+    		var $help = $element.parent().find('.'+className);
+    		// Twitter bs
+    		if ($parent.hasClass('input-group')){
+    			$parent = $parent.parent();
+    			$help = $parent.find('.'+className);
+    		}
     			
                 if($help.length == 0) {
                     $help = $('<span />')
@@ -119,10 +119,10 @@
             validationRule = $element.attr(config.validationRuleAttribute);
         
         var $parent = $element.parent();
-		// Twitter bs
-		if ($parent.hasClass('input-group')){
-			var $parent = $parent.parent();
-		}
+	// Twitter bs
+	if ($parent.hasClass('input-group')){
+		var $parent = $parent.parent();
+	}
 		
         // Remove possible error style applied by previous validation
         $element
