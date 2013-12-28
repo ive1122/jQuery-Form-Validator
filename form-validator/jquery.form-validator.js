@@ -57,27 +57,30 @@
                 help = $element.attr(attrName);
 
             if(help) {
+                var $parent = $element.parent();
+    			var $help = $element.parent().find('.'+className);
+    			// Twitter bs
+    			if ($parent.hasClass('input-group')){
+    				$parent = $parent.parent();
+    				$help = $parent.find('.'+className);
+    			}
+    			
+                if($help.length == 0) {
+                    $help = $('<span />')
+                                .addClass(className)
+                                .addClass('help-block') // twitter bs
+                                .text(help)
+                                .hide();
+				}
+				
                 $element
                     .addClass('has-help-txt')
                     .bind('focus.validation', function() {
-                        var $help = $element.parent().find('.'+className);
-                        if($help.length == 0) {
-                            $help = $('<span />')
-                                        .addClass(className)
-                                        .addClass('help-block') // twitter bs
-                                        .text(help)
-                                        .hide();
-
-                            $element.after($help);
-
-                        }
+                        $parent.append($help);
                         $help.fadeIn();
                     })
                     .bind('blur.validation', function() {
-                        $(this)
-                            .parent()
-                            .find('.'+className)
-                                .fadeOut('slow');
+                        $help.fadeOut('slow');
                     });
             }
         });
@@ -114,17 +117,24 @@
             $form = $element.closest("form"),
 
             validationRule = $element.attr(config.validationRuleAttribute);
-
+        
+        var $parent = $element.parent();
+		// Twitter bs
+		if ($parent.hasClass('input-group')){
+			var $parent = $parent.parent();
+		}
+		
         // Remove possible error style applied by previous validation
         $element
             .removeClass(config.errorElementClass)
-            .css('border-color', '')
-            .parent()
-                .find('.'+config.errorMessageClass).remove();
+            .css('border-color', '');
+        $parent
+             .find('.'+config.errorMessageClass).remove();
 
         // Twitter bs
         $form.find('.has-error').removeClass('has-error');
-        $element.removeClass('valid').parent().removeClass('has-success');
+        $element.removeClass('valid');
+        $parent.removeClass('has-success');
 
         // if element has custom err msg container, clear it
         if( elementErrMsgObj != null) {
@@ -137,28 +147,30 @@
 
         if(validation === true) {
             $element
-                .addClass('valid')
-                .parent()
-                    .addClass('has-success'); // twitter bs
+                .addClass('valid');
+            
+            $parent
+                .addClass('has-success'); // twitter bs
         } else if(validation === null) {
             $element
-                .removeClass('valid')
-                .parent()
-                    .removeClass('has-error')
-                    .removeClass('has-success');
+                .removeClass('valid');
+            
+            $parent
+                .removeClass('has-error')
+                .removeClass('has-success'); // twitter bs
         } else {
             $element
                 .addClass(config.errorElementClass)
-                .removeClass('valid')
-                .parent()
-                    .addClass('has-error')
-                    .removeClass('has-success'); // twitter bs
+                .removeClass('valid');
+            
+            $parent
+                .addClass('has-error')
+                .removeClass('has-success'); // twitter bs
 
             // if element has custom err msg container, use it
             if( elementErrMsgObj != null) {
                 elementErrMsgObj.innerHTML = validation;
             } else { // use regular span append
-                var $parent = $element.parent();
                 $parent.append('<span class="'+config.errorMessageClass+' help-block">'+validation+'</span>');
                 $parent.addClass('has-error'); // twitter bs
             }
